@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New User</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .form-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-title {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        border-color: #667eea;
+    }
+
+    .password-wrapper {
+        position: relative;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #667eea;
+    }
+  </style>
+
+</head>
+<body class="bg-light">
+<div class="container py-5">
+  <div class="form-card">
+    <div class="form-header">
+      <h3 class="form-title mb-0" th:text="${user != null} ? 'Edit User' : 'Add New User'"></h3>
+    </div>
+
+    <div class="p-4">
+      <form th:action="${user != null} ? @{/updateuser} : @{/saveuser}" method="post"
+            class="needs-validation" novalidate>
+
+        <!-- Hidden ID field for edit -->
+        <input type="hidden" name="profileId" th:value="${user?.profileId}">
+
+        <div class="row g-4">
+          <!-- Personal Info Column -->
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="name" class="form-label fw-medium">Full Name</label>
+              <input type="text" class="form-control" id="name" name="name" required
+                     th:value="${user?.name}" placeholder="Enter full name">
+              <div class="invalid-feedback">Please enter a valid name</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label fw-medium">Email Address</label>
+              <input type="email" class="form-control" id="email" name="email" required
+                     th:value="${user?.email}" placeholder="Enter email address">
+              <div class="invalid-feedback">Please enter a valid email</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="role" class="form-label fw-medium">User Role</label>
+              <select class="form-select" id="role" name="role" required>
+                <option value="" disabled th:selected="${user == null}">Select a role</option>
+                <option th:each="role : ${distinctRoles}"
+                        th:value="${role}"
+                        th:text="${role}"
+                        th:selected="${user != null && user.loginMaster.roles.![roleName].contains(role)}">
+                </option>
+              </select>
+              <div class="invalid-feedback">Please select a role</div>
+            </div>
+          </div>
+
+          <!-- Login Info Column -->
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="username" class="form-label fw-medium">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required
+                     th:value="${user?.loginMaster?.username}" placeholder="Enter username">
+              <div class="invalid-feedback">Please choose a username</div>
+            </div>
+
+            <div class="mb-3 password-wrapper">
+              <label for="password" class="form-label fw-medium">Password</label>
+              <input type="password" class="form-control" id="password" name="password"
+                     placeholder="Enter password" pattern=".{6,}"
+                     th:value="${#strings.isEmpty(user?.loginMaster?.password)} ? '' :
+                                            ${#strings.substringAfter(user?.loginMaster?.password, '{noop}')}">
+              <i class="bi bi-eye-slash password-toggle" onclick="togglePassword()"></i>
+              <div class="invalid-feedback">At least 6 characters required</div>
+              <small class="text-muted">Leave blank to keep existing password</small>
+            </div>
+
+            <div class="form-check form-switch mb-4">
+              <input class="form-check-input" type="checkbox" role="switch" id="activeStatus"
+                     th:checked="${user?.loginMaster?.isActive}">
+              <label class="form-check-label" for="activeStatus">Active User</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3">
+          <a th:href="@{/}" class="btn btn-outline-secondary">Back to List</a>
+          <button type="submit" class="btn btn-primary"
+                  th:text="${user != null} ? 'Update User' : 'Create User'"></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS and Icons -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+<script>
+  function togglePassword() {
+      const passwordField = document.getElementById('password');
+      const toggleIcon = document.querySelector('.password-toggle');
+
+      if (passwordField.type === 'password') {
+          passwordField.type = 'text';
+          toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+      } else {
+          passwordField.type = 'password';
+          toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+      }
+  }
+
+  // Form validation
+  (() => {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+</script>
+
+</body>
+</html>

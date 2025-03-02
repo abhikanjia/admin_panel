@@ -1,0 +1,148 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>-->
+
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Login Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        body {
+            background: linear-gradient(120deg, #7f7fd5, #86a8e7, #91eae4);
+            height: 100vh;
+        }
+
+        .failed{
+        color:red;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-header {
+            position: relative;
+            padding: 45px 30px 0 30px;
+        }
+
+        .login-header h2 {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 2.5rem;
+        }
+
+        .login-form {
+            padding: 30px;
+        }
+
+        .form-control {
+            border: none;
+            border-bottom: 2px solid #ddd;
+            border-radius: 0;
+            padding: 10px 0;
+            margin-bottom: 25px;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-bottom-color: #7f7fd5;
+        }
+
+        .btn-login {
+            background: #7f7fd5;
+            color: white;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.4s;
+        }
+
+        .btn-login:hover {
+            background: #6c6cbd;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .social-login {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px);
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-6 col-lg-5">
+            <div class="login-container">
+                <div class="login-header">
+                    <h2 class="text-center mb-4">Welcome Back!</h2>
+                </div>
+
+                <form class="login-form" action="#" th:action="@{/authenticateTheUser}" method="POST">
+
+                    <div th:if="${param.error}">
+                        <div class="alert alert-danger col-xs-offset-1 col-xs-10">Sorry! You entered invalid username/password.</div>
+                    </div>
+
+                    <div th:if="${param.logout}">
+                        <div class="alert alert-success col-xs-offset-1 col-xs-10">You have been logged out successfully!</div>
+                    </div>
+                    <div class="mb-4">
+                        <input type="text" name="username" class="form-control" placeholder="User Name" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+
+                    <div class="d-grid mb-4">
+                        <button type="submit" value="login" class="btn btn-login">Sign In</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
