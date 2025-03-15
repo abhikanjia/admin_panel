@@ -43,6 +43,7 @@ public class DemoSecurityConfig {
                         .requestMatchers("/adduser").hasAuthority("ADMIN")
                         .requestMatchers("/save").hasAuthority("ADMIN")
                         .requestMatchers("/updateuser").hasAuthority("ADMIN")
+                        .requestMatchers("/error/**", "/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form ->
