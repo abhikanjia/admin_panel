@@ -1,8 +1,7 @@
 package com.learn.adminpanel.model;
 
+
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "login_master")
@@ -13,7 +12,7 @@ public class LoginMaster {
     @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "user_is_active", nullable = false)
+    @Column(name = "user_is_active")
     private Boolean isActive;
 
     @Column(name = "user_username", nullable = false, unique = true)
@@ -26,15 +25,13 @@ public class LoginMaster {
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id")  // Correct FK reference
     private UserProfile userProfile;
 
-    @OneToMany(mappedBy = "loginMaster", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RoleMaster> roles = new ArrayList<>();
-
     public LoginMaster() {}
 
-    public LoginMaster(Boolean isActive, String username, String password) {
+    public LoginMaster(Boolean isActive, String username, String password, UserProfile userProfile) {
         this.isActive = isActive;
         this.username = username;
         this.password = password;
+        this.userProfile = userProfile;
     }
 
     public int getUserId() {
@@ -75,23 +72,5 @@ public class LoginMaster {
 
     public void setUserProfile(UserProfile userProfile) {
         this.userProfile = userProfile;
-    }
-
-    public List<RoleMaster> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<RoleMaster> roles) {
-        this.roles = roles;
-    }
-
-    public void addRole(RoleMaster role) {
-        roles.add(role);
-        role.setLoginMaster(this);
-    }
-
-    public void removeRole(RoleMaster role) {
-        roles.remove(role);
-        role.setLoginMaster(null);
     }
 }

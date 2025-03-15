@@ -81,17 +81,14 @@
             </tr>
             </thead>
             <tr th:each="tempUser : ${users}">
-                <td class="ps-4 fw-medium" th:text="1"/>
+                <td class="ps-4 fw-medium" th:text="${tempUser.profileId}"/>
                 <td class=" align-items-center fw-medium text-muted small" th:text="${tempUser.name}"/>
                 <td class=" align-items-center fw-medium text-muted small" th:text="${tempUser.email}"/>
 
 
                 <td class="align-items-center fw-medium text-muted small">
                     <div class="d-flex role-container">
-        <span th:each="role : ${tempUser.loginMaster.roles}"
-              class="role-badge bg-primary bg-opacity-10 text-primary me-2">
-            <span th:text="${role.roleName}"></span>
-        </span>
+                        <span th:each="role : ${tempUser.roles}" th:text="${role.roleName} + ','"></span>
                     </div>
                 </td>
 

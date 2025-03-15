@@ -1,5 +1,6 @@
 package com.learn.adminpanel.model;
 
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,13 +17,13 @@ public class RoleMaster {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id")
-    private LoginMaster loginMaster;
+    private UserProfile userProfile;
 
     public RoleMaster() {}
 
-    public RoleMaster(String roleName, LoginMaster loginMaster) {
+    public RoleMaster(String roleName, UserProfile userProfile) {
         this.roleName = roleName;
-        this.loginMaster = loginMaster;
+        this.userProfile = userProfile;
     }
 
     public int getRoleId() {
@@ -41,11 +42,11 @@ public class RoleMaster {
         this.roleName = roleName;
     }
 
-    public LoginMaster getLoginMaster() {
-        return loginMaster;
+    public UserProfile getUserProfile() {
+        return userProfile;
     }
 
-    public void setLoginMaster(LoginMaster loginMaster) {
-        this.loginMaster = loginMaster;
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
     }
 }

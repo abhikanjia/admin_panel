@@ -32,16 +32,12 @@ public class DemoSecurityConfig {
         return jdbcUserDetailsManager;
     }
 
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(configurer ->
                 configurer
-                        .requestMatchers("/").hasAuthority("EMPLOYEE")
-                        .requestMatchers("/leaders/**").hasAuthority("MANAGER")
-                        .requestMatchers("/systems/**").hasAuthority("ADMIN")
+                        .requestMatchers("/").hasAnyAuthority("EMPLOYEE", "MANAGER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form ->
@@ -53,37 +49,7 @@ public class DemoSecurityConfig {
                 .logout(logout -> logout.permitAll()
                 ).exceptionHandling(configurer ->
                         configurer.accessDeniedPage("/access-denied")
-
-
         );
-
         return http.build();
     }
-
-
-    /* @Bean
-    public InMemoryUserDetailsManager userDetailsManager(){
-
-        UserDetails john = User.builder()
-                .username("john")
-                .password("{noop}test123")
-                .roles("EMPLOYEE")
-                .build();
-
-        UserDetails mary = User.builder()
-                .username("mary")
-                .password("{noop}test123")
-                .roles("EMPLOYEE","MANAGER")
-                .build();
-
-        UserDetails susan = User.builder()
-                .username("susan")
-                .password("{noop}test123")
-                .roles("EMPLOYEE","MANAGER","ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(john, mary, susan);
-    }*/
-
-
 }

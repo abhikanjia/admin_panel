@@ -11,18 +11,4 @@ public class DemoController {
         return "dashboard-home";
     }
 
-    @GetMapping("/leaders")
-    public String showLeaders(){
-        return "leaders";
-    }
-
-    @GetMapping("/systems")
-    public String showSystems(){
-        return "systems";
-    }
-
-    @GetMapping("/admin-section")
-    public String showAdminSection(){
-        return "employee-data";
-    }
 }
