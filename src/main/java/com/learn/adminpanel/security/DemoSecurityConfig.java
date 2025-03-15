@@ -38,6 +38,11 @@ public class DemoSecurityConfig {
         http.authorizeHttpRequests(configurer ->
                 configurer
                         .requestMatchers("/").hasAnyAuthority("EMPLOYEE", "MANAGER", "ADMIN")
+                        .requestMatchers("/allusers").hasAuthority("ADMIN")
+                        .requestMatchers("/deleteuser").hasAuthority("ADMIN")
+                        .requestMatchers("/adduser").hasAuthority("ADMIN")
+                        .requestMatchers("/save").hasAuthority("ADMIN")
+                        .requestMatchers("/updateuser").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form ->

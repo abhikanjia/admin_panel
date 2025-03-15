@@ -10,5 +10,4 @@ public class DemoController {
     public String showHome(){
         return "dashboard-home";
     }
-
 }

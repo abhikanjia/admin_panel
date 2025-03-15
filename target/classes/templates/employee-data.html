@@ -4,116 +4,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Table with Multiple Roles</title>
+    <title>Employee Management Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
-        .employee-table {
-            border-radius: 15px;
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+            --accent-color: #4f46e5;
+            --hover-bg: rgba(79, 70, 229, 0.03);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8fafc;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
             overflow: hidden;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
         }
 
         .table-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
+            padding: 1.2rem 2rem;
         }
 
-        .role-badge {
-            margin: 2px;
-            padding: 8px 12px;
-            border-radius: 20px;
+        .table-title {
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            margin: 0;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 500;
-            font-size: 0.85rem;
-            transition: transform 0.2s ease;
         }
 
-        .role-badge:hover {
-            transform: translateY(-2px);
+        .role-pill {
+            padding: 0.35rem 0.9rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--accent-color);
+            transition: all 0.2s ease;
         }
 
-        .action-btns .btn {
-            margin: 0 4px;
-            padding: 6px 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
 
         .edit-btn {
-            background: rgba(41, 128, 185, 0.1);
-            border: 1px solid #2980b9;
-            color: #2980b9;
+            background: rgba(96, 165, 250, 0.1);
+            color: #3b82f6;
         }
 
         .delete-btn {
-            background: rgba(231, 76, 60, 0.1);
-            border: 1px solid #e74c3c;
-            color: #e74c3c;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .table-hover tbody tr {
+            transition: all 0.2s ease;
         }
 
         .table-hover tbody tr:hover {
-            background-color: #f8f9fa;
+            background: var(--hover-bg);
+            transform: translateX(8px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .active {
+            background: #10b981;
         }
 
         @media (max-width: 768px) {
-            .role-container {
-                flex-wrap: wrap;
+            .dashboard-card {
+                border-radius: 0.75rem;
             }
-            .action-btns {
-                flex-wrap: wrap;
-                gap: 8px;
+
+            .table-responsive {
+                padding: 0 1rem;
             }
         }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .table-row {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .swal2-popup.sweet-popup {
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.sweet-title {
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.sweet-confirm {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 12px 30px !important;
+}
+
+.sweet-cancel {
+    background: linear-gradient(45deg, #7f7fd5, #86a8e7) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 12px 30px !important;
+}
+
+.swal2-icon.swal2-warning {
+    color: #ff6b6b !important;
+    border-color: #ff6b6b !important;
+}
+
     </style>
 </head>
 <body class="bg-light">
-<a th:href="@{/adduser}" class="btn btn-primary">Add User</a>
 <div class="container py-5">
-    <div class="table-responsive employee-table">
-        <table class="table table-hover">
-            <thead class="table-header">
-            <tr>
-                <th class="ps-4">#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th class="ps-3">Roles</th>
-                <th class="ps-3">Actions</th>
-            </tr>
-            </thead>
-            <tr th:each="tempUser : ${users}">
-                <td class="ps-4 fw-medium" th:text="${tempUser.profileId}"/>
-                <td class=" align-items-center fw-medium text-muted small" th:text="${tempUser.name}"/>
-                <td class=" align-items-center fw-medium text-muted small" th:text="${tempUser.email}"/>
+    <div class="dashboard-card">
+        <div class="table-header d-flex justify-content-between align-items-center">
+            <h3 class="table-title">Employee Directory</h3>
+            <a th:href="@{/}" class="btn btn-light btn-sm ">
+                <i class="me-2"></i>Back To Dashboard
+            </a>
+            <a th:href="@{/adduser}" class="btn btn-light btn-sm">
+                <i class="fas fa-plus me-2"></i>Add User
+            </a>
+        </div>
 
+        <div class="table-responsive p-4">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr class="text-uppercase small text-muted">
+                    <th class="ps-4">Employee</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th class="text-center">Roles</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="tempUser : ${users}" class="table-row">
+                    <td class="ps-4">
+                        <div class="d-flex align-items-center">
+                            <div class="user-avatar me-3">
+                                [[${tempUser.name.substring(0,1)}]]
+                            </div>
+                            <div>
+                                <div class="fw-medium">[[${tempUser.name}]]</div>
+                                <small class="text-muted">ID: [[${tempUser.profileId}]]</small>
+                            </div>
+                        </div>
+                    </td>
 
-                <td class="align-items-center fw-medium text-muted small">
-                    <div class="d-flex role-container">
-                        <span th:each="role : ${tempUser.roles}" th:text="${role.roleName} + ','"></span>
-                    </div>
-                </td>
+                    <td>
+                        <div class="text-primary">[[${tempUser.email}]]</div>
+                    </td>
 
-                <td class="pe-4 action-btns">
+                    <td>
+                        <span class="status-dot active"></span>
+                        <span class="text-muted small">Active</span>
+                    </td>
 
-                    <a th:href="@{/updateuser(profileId=${tempUser.profileId})}"
-                       class="btn btn-info btn-sm">Update</a>
+                    <td>
+                        <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                <span th:each="role : ${tempUser.roles}"
+                                      class="role-pill">
+                                    [[${role.roleName}]]
+                                </span>
+                        </div>
+                    </td>
 
-                    <form th:action="@{/deleteuser}" method="post" style="display: inline-block;">
-                        <input type="hidden" name="profileId" th:value="${tempUser.profileId}">
-                        <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Are you sure you want to delete this employee?')">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    <td class="text-end pe-4">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a th:href="@{/updateuser(profileId=${tempUser.profileId})}"
+                               class="action-btn edit-btn">
+                                <i class="fas fa-pen"></i>
+                            </a>
+
+                            <form th:action="@{/deleteuser}" method="post"
+                                  style="display: inline-block;">
+                                <input type="hidden" name="profileId"
+                                       th:value="${tempUser.profileId}">
+<!--                                <button type="submit" class="action-btn delete-btn"-->
+<!--                                        onclick="return confirm('Delete this employee?')">-->
+<!--                                    <i class="fas fa-trash"></i>-->
+<!--                                </button>-->
+                                <button type="submit" class="action-btn delete-btn" onclick="confirmDelete(event)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </div>
 
-<!-- Bootstrap JS and Icons -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+<script>
+    function confirmDelete(event) {
+        event.preventDefault();
+        const form = event.target.closest('form');
 
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'sweet-popup',
+                title: 'sweet-title',
+                confirmButton: 'sweet-confirm',
+                cancelButton: 'sweet-cancel'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+</script>
 </body>
 </html>
