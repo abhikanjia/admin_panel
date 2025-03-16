@@ -1,0 +1,10 @@
+com\learn\adminpanel\model\UserProfile.class
+com\learn\adminpanel\controller\DemoController.class
+com\learn\adminpanel\controller\LoginController.class
+com\learn\adminpanel\repository\RoleMasterRepository.class
+com\learn\adminpanel\model\RoleMaster.class
+com\learn\adminpanel\DemosecurityApplication.class
+com\learn\adminpanel\security\DemoSecurityConfig.class
+com\learn\adminpanel\controller\UserProfileController.class
+com\learn\adminpanel\repository\UserProfileRepository.class
+com\learn\adminpanel\model\LoginMaster.class
