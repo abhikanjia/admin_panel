@@ -1,12 +1,18 @@
 package com.learn.adminpanel.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "user_profile")
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserProfile {
 
     @Id
@@ -30,8 +36,6 @@ public class UserProfile {
     @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoleMaster> roles = new ArrayList<>();
 
-    public UserProfile() {}
-
     public UserProfile(String name, String email, byte[] image, LoginMaster loginMaster, List<RoleMaster> roles) {
         this.name = name;
         this.email = email;
@@ -39,55 +43,6 @@ public class UserProfile {
         this.loginMaster = loginMaster;
         this.roles = roles;
     }
-
-    public int getProfileId() {
-        return profileId;
-    }
-
-    public void setProfileId(int profileId) {
-        this.profileId = profileId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
-    public LoginMaster getLoginMaster() {
-        return loginMaster;
-    }
-
-//    public void setLoginMaster(LoginMaster loginMaster) {
-//        this.loginMaster = loginMaster;
-//    }
-
-    public List<RoleMaster> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<RoleMaster> roles) {
-        this.roles = roles;
-    }
-
 
     @Transient
     private List<String> roleNames = new ArrayList<>(); // Initialize here

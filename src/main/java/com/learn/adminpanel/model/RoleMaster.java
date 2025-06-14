@@ -2,9 +2,15 @@ package com.learn.adminpanel.model;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "role_master")
+@NoArgsConstructor
+@Getter
+@Setter
 public class RoleMaster {
 
     @Id
@@ -19,34 +25,8 @@ public class RoleMaster {
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id")
     private UserProfile userProfile;
 
-    public RoleMaster() {}
-
     public RoleMaster(String roleName, UserProfile userProfile) {
         this.roleName = roleName;
-        this.userProfile = userProfile;
-    }
-
-    public int getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public UserProfile getUserProfile() {
-        return userProfile;
-    }
-
-    public void setUserProfile(UserProfile userProfile) {
         this.userProfile = userProfile;
     }
 }
