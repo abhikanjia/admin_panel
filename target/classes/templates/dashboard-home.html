@@ -89,8 +89,8 @@
         <a th:href="@{/allusers}">Admin Section</a>
     </div>
 
-    <div sec:authorize="hasAuthority('MANAGER')">
-        <a href="#">Inventory Management</a>
+    <div sec:authorize="hasAnyAuthority('ADMIN','MANAGER','EMPLOYEE')">
+        <a th:href="@{/showProducts}">Inventory Management</a>
     </div>
 
     <a href="#">All Orders</a>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+            --accent-color: #4f46e5;
+            --hover-bg: rgba(79, 70, 229, 0.03);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8fafc;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1.2rem 2rem;
+        }
+
+        .table-title {
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            margin: 0;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn {
+            background: rgba(96, 165, 250, 0.1);
+            color: #3b82f6;
+        }
+
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .product-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .badge-success {
+            background-color: #10b981;
+        }
+
+        .badge-danger {
+            background-color: #ef4444;
+        }
+
+        .table-hover tbody tr:hover {
+            background: var(--hover-bg);
+            transform: translateX(6px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-row {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-card {
+                border-radius: 0.75rem;
+            }
+
+            .table-responsive {
+                padding: 0 1rem;
+            }
+        }
+
+        .swal2-popup.sweet-popup {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .sweet-title {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .sweet-confirm {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53) !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 30px !important;
+        }
+
+        .sweet-cancel {
+            background: linear-gradient(45deg, #7f7fd5, #86a8e7) !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 30px !important;
+        }
+
+        .swal2-icon.swal2-warning {
+            color: #ff6b6b !important;
+            border-color: #ff6b6b !important;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <div class="dashboard-card">
+        <div class="table-header d-flex justify-content-between align-items-center">
+            <h3 class="table-title">Product Inventory</h3>
+            <a th:href="@{/}" class="btn btn-light btn-sm ">
+                <i class="me-2"></i>Back To Dashboard
+            </a>
+            <a th:href="@{/addProduct}" class="btn btn-light btn-sm">
+                <i class="fas fa-plus me-2"></i>Add Product
+            </a>
+            </a>
+        </div>
+
+        <div class="table-responsive p-4">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr class="text-uppercase small text-muted">
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="product : ${products}" class="table-row">
+                    <td>[[${product.productId}]]</td>
+                    <td>
+                        <div class="user-avatar me-3">
+                            [[${product.productName.substring(0,1)}]]
+                        </div>
+                    </td>
+                    <td class="fw-medium">[[${product.productName}]]</td>
+                    <td>₹[[${product.productPrice}]]</td>
+                    <td>[[${product.productType}]]</td>
+                    <td>[[${product.productStock}]]</td>
+                    <td>
+            <span th:classappend="${product.productLabel == 'In Stock'} ? 'badge badge-success' : 'badge badge-danger'"
+                  class="badge">
+                [[${product.productLabel}]]
+            </span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a th:href="@{/updateProduct(productId=${product.productId})}" class="action-btn edit-btn">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <form th:action="@{/deleteProduct}" method="post" style="display: inline-block;">
+                                <input type="hidden" name="productId" th:value="${product.productId}">
+                                <button type="submit" class="action-btn delete-btn" onclick="confirmDelete(event)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(event) {
+        event.preventDefault();
+        const form = event.target.closest('form');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'sweet-popup',
+                title: 'sweet-title',
+                confirmButton: 'sweet-confirm',
+                cancelButton: 'sweet-cancel'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
